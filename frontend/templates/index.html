@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Clarity</title>
+</head>
+<body>
+    {% block content %}
+    <h1>Submit Code Snippet</h1>
+    <form id="codeForm" method="POST">
+        {% csrf_token %} 
+        {{ form.as_p }}
+        <input type="hidden" name="code_snippet_pk" id="codeSnippetPk"> 
+        <button type="submit">Submit</button>
+        <button type="submit" name="format_requested" value="True">Format Code</button>
+    </form>
+
+    <div id="analysis-results" style="display: none;"> 
+        <h2>Analysis Results</h2>
+        </div>
+
+    
+    {% endblock %}
+</body>
+</html>
