@@ -10,7 +10,7 @@ from users.models import UserProfile
 # Create your views here.
 @login_required(login_url='signin')
 def index(request):
- return render(request,'index.html')
+ return render(request,'index2.html')
 
 def signup(request):
  if request.method == 'POST':
@@ -36,7 +36,7 @@ def signup(request):
 
         #create a profile object for new user 
         user_model = User.objects.get(username=username)
-        new_profile = Profile.objects.create(user=user_model, id_user=user_model.id)
+        new_profile = UserProfile.objects.create(user=user_model, id_user=user_model.id)
         new_profile.save()
         return redirect('settings')
   else:
@@ -64,6 +64,5 @@ def signin(request):
 def Logout(request):
   logout(request)
   return redirect('signin')
-@login_required(login_url='signin')
-def Settings(request):
-  return render(request, 'settings.html')
+
+
