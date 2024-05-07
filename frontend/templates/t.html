@@ -147,17 +147,11 @@
     <div class="search-container">
       <form id="codeForm" method="POST">
         {% csrf_token %}
-        {{ form.as_p }}
-        <input type="hidden" name="code_snippet_pk" id="codeSnippetPk">
-        <button type="button" class="search-button" onclick="sendMessage()">
-          <i class="fa fa-search"></i>
-        </button>
-        <button type="submit" class="search-button">
-          Submit
-        </button>
-        <button type="submit" name="format_requested" value="True" class="search-button">
-          Format Code
-        </button>
+        <input type="text" name="code_snippet" id="codeSnippet">
+        <input type="text" name="language" id="language">
+        <!-- Add hidden input for user_profile -->
+        <input type="hidden" name="user_profile" value="{{ request.user.userprofile.id }}">
+        <button type="submit" class="search-button">Submit</button>
       </form>
     </div>
     <div class="feedback-box" id="feedbackBox">

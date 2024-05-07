@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{% comment %} <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -23,4 +23,244 @@
     
     {% endblock %}
 </body>
+</html> {% endcomment %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Clarity</title>
+    <!-- Add your stylesheets here -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+      /* Body styling */
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background-color: #000;
+        color: #fff; /* White text color */
+      }
+
+      /* Search container styling */
+      .search-container {
+        position: fixed;
+        bottom: 0;
+        width: 70%; /* Adjust as needed */
+        left: 25%; /* Center the search bar */
+        padding: 20px;
+        background-color: #000;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      /* Search input styling */
+      .search-input {
+        width: 80%;
+        padding: 10px;
+        border: none;
+        border-radius: 20px;
+        font-size: 16px;
+        background-color: #222; /* Darker background for input */
+        color: #fff; /* White text color */
+      }
+
+      /* Search button styling */
+      .search-button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 20px;
+        background-color: #6633cc; /* Dark purple */
+        color: #fff; /* White text color */
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      /* Search history styling */
+      .search-history {
+        position: fixed;
+        left: 0;
+        width: 20%; /* 20% width */
+        height: 100%; /* 100% height */
+        color: #fff; /* White text color */
+        background-color: #111; /* Dark background */
+        padding: 10px 0;
+        text-align: center;
+        overflow-y: auto; /* Add scrollbar if needed */
+      }
+
+      /* Individual search item styling */
+      .search-history div {
+        padding: 8px;
+        margin: 4px 0;
+        background-color: #333; /* Dark gray */
+        border-radius: 5px;
+      }
+
+      /* Search history title styling */
+      .search-history h3 {
+        display: flex;
+      }
+
+      /* Clear button styling */
+      .clear-button {
+        margin-top: 10px;
+        gap: 2px;
+        padding: 8px 20px;
+        border: none;
+        border-radius: 20px;
+        background-color: #333; /* Dark gray */
+        color: #fff; /* White text color */
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      /* Feedback box styling */
+      .feedback-box {
+        position: fixed;
+        top: 40%;
+        right: 40%;
+        transform: translate(50%, -50%);
+        width: 300px;
+        padding: 20px;
+        background-color: #111;
+        color: #fff;
+        border-radius: 10px;
+        text-align: center;
+        display: none; /* Initially hidden */
+        transition: opacity 0.5s ease-in-out; /* Add transition effect */
+        box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2); /* Add box shadow */
+      }
+
+      /* Add some margin between paragraphs */
+      .feedback-box p {
+        margin-bottom: 15px;
+      }
+
+      /* Add hover effect on search button */
+      .search-button:hover {
+        background-color: #5a2f8e; /* Darker purple on hover */
+      }
+
+      /* Add hover effect on clear button */
+      .clear-button:hover {
+        background-color: #444; /* Darker gray on hover */
+      }
+
+      /* Typing indicator styling */
+      .typing-indicator {
+        font-style: italic;
+        color: #999;
+      }
+      .headerheading {
+        position: absolute;
+        left: 21%;
+        color: white;
+        font-family: cursive;
+      }
+    </style>
+  </head>
+  <body>
+    <h2 class="headerheading">CodeClarity..</h2>
+    <div class="search-history" id="searchHistory">
+      <h3>History...</h3>
+      <button class="clear-button" onclick="clearHistory()">
+        Clear History
+      </button>
+    </div>
+    <div class="search-container">
+      <form id="codeForm" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="hidden" name="code_snippet_pk" id="codeSnippetPk">
+        <button type="button" class="search-button" onclick="sendMessage()">
+          <i class="fa fa-search"></i>
+        </button>
+        <button type="submit" class="search-button">
+          Submit
+        </button>
+        <button type="submit" name="format_requested" value="True" class="search-button">
+          Format Code
+        </button>
+      </form>
+    </div>
+    <div class="feedback-box" id="feedbackBox">
+      <p>This is your answer:</p>
+      <p>
+        
+      </p>
+    </div>
+
+    <script>
+      function toggleFeedbackBox(display) {
+        var feedbackBox = document.getElementById("feedbackBox");
+        feedbackBox.style.display = display ? "block" : "none";
+      }
+    
+      function sendMessage() {
+        var input = document.getElementById("searchInput").value.trim();
+        if (input !== "") {
+          var searchHistory = document.getElementById("searchHistory");
+          var newMessage = document.createElement("div");
+          newMessage.textContent = "You: " + input;
+          searchHistory.appendChild(newMessage);
+          document.getElementById("searchInput").value = "";
+          receiveMessage(); // Simulate receiving a message after sending
+          toggleFeedbackBox(true); // Show the feedback box
+          var today = new Date().toLocaleDateString();
+          var existingMessages = JSON.parse(localStorage.getItem("messages")) || {};
+          if (!existingMessages[today]) {
+            existingMessages[today] = [];
+          }
+          existingMessages[today].push({ sender: "You", message: input });
+          localStorage.setItem("messages", JSON.stringify(existingMessages));
+        }
+      }
+    
+      function receiveMessage() {
+        var messages = ["Hello!", "How are you?", "What can I help you with today?"];
+        var randomMessage = messages[Math.floor(Math.random() * messages.length)];
+        var searchHistory = document.getElementById("searchHistory");
+        var newMessage = document.createElement("div");
+        newMessage.textContent = "CodeClarity: " + randomMessage;
+        searchHistory.appendChild(newMessage);
+        var today = new Date().toLocaleDateString();
+        var existingMessages = JSON.parse(localStorage.getItem("messages")) || {};
+        if (!existingMessages[today]) {
+          existingMessages[today] = [];
+        }
+        existingMessages[today].push({ sender: "CodeClarity", message: randomMessage });
+        localStorage.setItem("messages", JSON.stringify(existingMessages));
+      }
+    
+      window.onload = function () {
+        var searchHistory = document.getElementById("searchHistory");
+        var existingMessages = JSON.parse(localStorage.getItem("messages")) || {};
+        for (var date in existingMessages) {
+          var heading = document.createElement("h2");
+          heading.textContent = date;
+          searchHistory.appendChild(heading);
+          existingMessages[date].forEach(function (message) {
+            var messageElement = document.createElement("div");
+            messageElement.textContent = message.sender + ": " + message.message;
+            searchHistory.appendChild(messageElement);
+          });
+        }
+        if (Object.keys(existingMessages).length > 0) {
+          toggleFeedbackBox(true);
+        }
+      };
+    
+      function clearHistory() {
+        localStorage.removeItem("messages");
+        var searchHistory = document.getElementById("searchHistory");
+        searchHistory.innerHTML =
+          "<h3>History...</h3><button class='clear-button' onclick='clearHistory()'>Clear History</button>";
+        toggleFeedbackBox(false);
+      }
+    </script>
+    
+  </body>
 </html>

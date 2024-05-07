@@ -30,7 +30,19 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # Default ModelBackend
+    # Add other authentication backends as needed
+]
 
+# Specify your custom user model if you're using one
+
+AUTH_USER_MODEL = 'users.UserProfile'
+
+
+# URL configuration
+# LOGIN_URL = 'login'  # URL name for login view
+# LOGOUT_URL = 'logout'  # URL name for logout view
 
 INSTALLED_APPS = [
     'django.contrib.admin',
