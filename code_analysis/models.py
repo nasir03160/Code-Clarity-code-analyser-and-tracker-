@@ -1,5 +1,5 @@
 from django.db import models
-from users.models import UserProfile 
+from users.models import UserProfile
 
 class CodeSnippet(models.Model):
     code_snippet = models.TextField()
